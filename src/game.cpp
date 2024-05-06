@@ -189,11 +189,9 @@ namespace procon35 {
             problem.start_board.board.clear();
             for(auto& _row: data["board"]["start"]) {
                 std::string row = _row;
-                // problem.start_board.board.push_back(vector<int>());
                 problem.start_board.appendLine();
                 // change row string to int; "220103" -> [2,2,0,1,0,3]
                 for(auto& x: row) {
-                    // problem.start_board.board.back().push_back((int)x - '0');
                     problem.start_board.appendValue((int)x - '0');
                 }
             }
@@ -202,10 +200,8 @@ namespace procon35 {
             problem.goal_board.board.clear();
             for(auto& _row: data["board"]["goal"]) {
                 std::string row = _row;
-                // problem.goal_board.board.push_back(vector<int>());
                 problem.goal_board.appendLine();
                 for(auto& x: row) {
-                    // problem.goal_board.board.back().push_back((int)x - '0');
                     problem.goal_board.appendValue((int)x - '0');
                 }
             }
@@ -321,101 +317,6 @@ namespace procon35 {
 
             return board;
         }
-
-        // Board Game::operate(Board board, struct Operation op, struct Pattern pattern) {
-        //     int board_x, board_y;
-
-        //     // 型抜きの対象ピースの数値xは(x-10)に置き換える
-        //     for(int i = 0; i < pattern.height; i++) {
-        //         for(int j = 0; j < pattern.width; j++) {
-        //             if(pattern.cells.at(i).at(j) == 1) {
-        //                 board_x = op.x + j;
-        //                 board_y = op.y + i;
-        //                 if((0 <= board_y && board_y < board.board.size()) && (0 <= board_x && board_x < board.board.at(0).size())) {
-        //                     board.board.at(board_y).at(board_x) -= 10;
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     // 値が負のピースを寄せる
-        //     if(op.s == UP) {
-        //         for(int j = 0; j < pattern.width; j++) {
-        //             int shifted_piece_count = 0;
-        //             for(int i = 0; i < pattern.height; i++) {
-        //                 board_x = op.x + j;
-        //                 board_y = op.y + i;
-        //                 if((0 <= board_y && board_y < board.board.size()) && (0 <= board_x && board_x < board.board.at(0).size())) {
-        //                     if(board.board.at(board_y).at(board_x) < 0) {
-        //                         for(int k = board_y; k > shifted_piece_count; k--) {
-        //                             swap(&board, board_x, k, board_x, k - 1);
-        //                         }
-        //                         shifted_piece_count++;
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     } else if(op.s == DOWN) {
-        //         for(int j = 0; j < pattern.width; j++) {
-        //             int shifted_piece_count = 0;
-        //             for(int i = pattern.height - 1; i >= 0; i--) {
-        //                 board_x = op.x + j;
-        //                 board_y = op.y + i;
-        //                 if((0 <= board_y && board_y < board.board.size()) && (0 <= board_x && board_x < board.board.at(0).size())) {
-        //                     if(board.board.at(board_y).at(board_x) < 0) {
-        //                         for(int k = board_y; k < board.height - 1 - shifted_piece_count; k++) {
-        //                             swap(&board, board_x, k, board_x, k + 1);
-        //                         }
-        //                         shifted_piece_count++;
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     } else if(op.s == LEFT) {
-        //         for(int i = 0; i < pattern.height; i++) {
-        //             int shifted_piece_count = 0;
-        //             for(int j = 0; j < pattern.width; j++) {
-        //                 board_x = op.x + j;
-        //                 board_y = op.y + i;
-        //                 if((0 <= board_y && board_y < board.board.size()) && (0 <= board_x && board_x < board.board.at(0).size())) {
-        //                     if(board.board.at(board_y).at(board_x) < 0) {
-        //                         for(int k = board_x; k > shifted_piece_count; k--) {
-        //                             swap(&board, k, board_y, k - 1, board_y);
-        //                         }
-        //                         shifted_piece_count++;
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     } else if(op.s == RIGHT) {
-        //         for(int i = 0; i < pattern.height; i++) {
-        //             int shifted_piece_count = 0;
-        //             for(int j = pattern.width - 1; j >= 0; j--) {
-        //                 board_x = op.x + j;
-        //                 board_y = op.y + i;
-        //                 if((0 <= board_y && board_y < board.board.size()) && (0 <= board_x && board_x < board.board.at(0).size())) {
-        //                     if(board.board.at(board_y).at(board_x) < 0) {
-        //                         for(int k = board_x; k < board.width - 1 - shifted_piece_count; k++) {
-        //                             swap(&board, k, board_y, k + 1, board_y);
-        //                         }
-        //                         shifted_piece_count++;
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     // 型抜きの対象ピースの数値(x-10)はxに置き換える
-        //     for(int i = 0; i < board.height; i++) {
-        //         for(int j = 0; j < board.width; j++) {
-        //             if(board.board.at(i).at(j) < 0) {
-        //                 board.board.at(i).at(j) += 10;
-        //             }
-        //         }
-        //     }
-
-        //     return board;
-        // }
 
         vector<struct Operation> Game::getAvailableOperations(Board board, vector<struct Pattern> patterns) {
             vector<struct Operation> operations;
