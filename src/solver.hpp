@@ -13,17 +13,17 @@ namespace procon35 {
 
         class Node {
         public:
-            struct procon35::game::Board board;
+            procon35::game::Board board;
             procon35::game::Operation operation; // parent's operation
             double cost;
             double heuristic;
             Node* parent;
         
             Node();
-            Node(struct procon35::game::Board b);
+            Node(procon35::game::Board b);
             ~Node();
             Node(const Node& other);
-            bool operator==(const Node &other);
+            bool operator==(Node& other);
             double calculateHeuristics(Node* end, int mode);
             void print();
         };

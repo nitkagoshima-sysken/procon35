@@ -9,7 +9,7 @@
 namespace procon35 {
     namespace solver {
         Node::Node() = default;
-        Node::Node(struct procon35::game::Board b) : board(b), operation({0, 0, 0, 0}), cost(0), heuristic(0), parent(nullptr) {}
+        Node::Node(procon35::game::Board b) : board(b), operation({0, 0, 0, 0}), cost(0), heuristic(0), parent(nullptr) {}
         Node::~Node() {}
         Node::Node(const Node &other) {
             board = other.board;
@@ -18,7 +18,7 @@ namespace procon35 {
             heuristic = other.heuristic;
             parent = other.parent;
         }
-        bool Node::operator==(const Node &other) {
+        bool Node::operator==(Node& other) {
             return board == other.board;
         }
         struct Coordinate {
@@ -32,7 +32,7 @@ namespace procon35 {
         
                 for(int i = 0; i < board.height; i++) {
                     for(int j = 0; j < board.width; j++) {
-                        if(board.board.at(i).at(j) != end->board.board.at(i).at(j)) {
+                        if(board.getValue(j, i) != end->board.getValue(j, i)) {
                             not_same_value_num++;
                         }
                     }
@@ -59,12 +59,12 @@ namespace procon35 {
                 int x, y;
                 for(int i = 0; i < board.height; i++) {
                     for(int j = 0; j < board.width; j++) {
-                        int target = end->board.board.at(i).at(j);
+                        int target = end->board.getValue(j, i);
                         for(auto& n : neighborhood) {
                             x = j + n.x;
                             y = i + n.y;
                             if(x < 0 || x >= board.width || y < 0 || y >= board.height) continue;
-                            if(board.board.at(y).at(x) == target) {
+                            if(board.getValue(x, y) == target) {
                                 distance_sum += std::max(abs(n.x), abs(n.y));
                                 break;
                             }
@@ -80,7 +80,7 @@ namespace procon35 {
             std::cout << "board: " << std::endl;
             for(int i = 0; i < board.height; i++) {
                 for(int j = 0; j < board.width; j++) {
-                    int n = board.board.at(i).at(j);
+                    int n = board.getValue(j, i);
                     if(n / 10 == 0) {
                         std::cout << "  " << n;
                     } else {
@@ -139,7 +139,7 @@ namespace procon35 {
                 closed_set.push_back(current_node);
 
                 for(struct procon35::game::Operation neighbor : game.getAvailableOperations(current_node->board, problem.patterns)) {
-                    struct procon35::game::Board neighbor_board = game.operate(current_node->board, neighbor, problem.patterns.at(neighbor.p));
+                    procon35::game::Board neighbor_board = game.operate(current_node->board, neighbor, problem.patterns.at(neighbor.p));
                     Node* neighbor_node = new Node(neighbor_board);
 
                     neighbor_node->operation = neighbor;

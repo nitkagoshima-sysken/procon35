@@ -14,16 +14,43 @@ namespace procon35 {
             RIGHT
         };
 
-        struct Board {
+        class ArrayBoard {
+        public:
             int width;
             int height;
             vector<vector<int> > board;
-            Board();
-            Board(int width, int height, vector<vector<int> > board);
-            Board(const struct Board& other);
-            struct Board& operator=(const struct Board& other);
-            bool operator==(const struct Board& other);
+            ArrayBoard();
+            ArrayBoard(int width, int height, vector<vector<int> > board);
+            ArrayBoard(const ArrayBoard& other);
+            ArrayBoard& operator=(const ArrayBoard& other);
+            bool operator==(ArrayBoard& other);
+            int getValue(int x, int y);
+            void setValue(int x, int y, int value);
+            void appendLine();
+            void appendValue(int value);
         };
+
+        // 1マスの値を2bitで表現する
+        class BitBoard {
+        public:
+            int width;
+            int height;
+            vector<vector<char> > board;
+            BitBoard();
+            BitBoard(int width, int height, vector<vector<char> > board);
+            BitBoard(const BitBoard& other);
+            BitBoard& operator=(const BitBoard& other);
+            bool operator==(BitBoard& other);
+            int getValue(int x, int y);
+            void setValue(int x, int y, int value);
+            void appendLine();
+            void appendValue(int value);
+        private:
+            char width_end;
+        };
+
+        // define board type
+        using Board = BitBoard;
 
         struct Pattern {
             int p; // id of the pattern
@@ -49,8 +76,8 @@ namespace procon35 {
 
         class Problem {
         public:
-            struct Board start_board;
-            struct Board goal_board;
+            Board start_board;
+            Board goal_board;
             vector<struct Pattern> patterns;
             Problem();
             ~Problem();
@@ -74,13 +101,13 @@ namespace procon35 {
             ~Game();
             Problem loadProblem(std::filesystem::path path);
             void writeAnswer(Answer answer, std::filesystem::path path);
-            struct Board operate(struct Board board, struct Operation op, struct Pattern pattern);
-            vector<struct Operation> getAvailableOperations(struct Board board, vector<struct Pattern> patterns);
+            Board operate(Board board, struct Operation op, struct Pattern pattern);
+            vector<struct Operation> getAvailableOperations(Board board, vector<struct Pattern> patterns);
 
         private:
             // 定型抜き型を返す
             vector<struct Pattern> getStandardPatterns();
-            void swap(struct Board* board, int x1, int y1, int x2, int y2);
+            void swap(Board* board, int x1, int y1, int x2, int y2);
         };
     }
 }

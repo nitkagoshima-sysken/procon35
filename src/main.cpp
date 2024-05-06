@@ -22,10 +22,10 @@ int main(int argc, char **argv){
     bool print_answer = true;
     if(print_answer) {
         std::cout << "log: answer operations:" << std::endl;
-        struct procon35::game::Board board = problem.start_board;
+        procon35::game::Board board = problem.start_board;
         for(int i = 0; i < board.height; i++) {
             for(int j = 0; j < board.width; j++) {
-                std::cout << board.board.at(i).at(j) << " ";
+                std::cout << board.getValue(j, i) << " ";
             }
             std::cout << std::endl;
         }
@@ -35,7 +35,7 @@ int main(int argc, char **argv){
             board = game.operate(board, op, problem.patterns.at(op.p));
             for(int i = 0; i < board.height; i++) {
                 for(int j = 0; j < board.width; j++) {
-                    std::cout << board.board.at(i).at(j) << " ";
+                    std::cout << board.getValue(j, i) << " ";
                 }
                 std::cout << std::endl;
             }
