@@ -330,6 +330,145 @@ namespace procon35 {
             return board;
         }
 
+        // operate()の逆操作
+        // 端のマスから，patternとshift方向に従って指定した座標に値を持ってくる
+        // 指定する座標はpatternの左上隅の座標
+        /*
+        board:
+            x 0 1 2 x
+            x 3 0 x x
+            x x x x x
+            x x x x x
+            x x x x x
+        pattern:
+            0 1 0
+            1 0 1
+            1 1 0
+        のとき，x=1, y=2, shift=UPの操作後は
+        board:
+            x x x x x
+            x x x x x
+            x x 1 x x
+            x 0 x 2 x
+            x 3 0 x x
+        になる
+        */
+        Board Game::inverseOperate(Board board, struct Operation op, struct Pattern pattern) {
+            int board_x, board_y;
+
+            if(op.s == UP) {
+                for(int j = 0; j < pattern.width; j++) {
+                    board_x = op.x + j;
+                    if(board_x < 0 || board_x >= board.width) {
+                        continue;
+                    }
+                    int unshifted_piece_count = 0;
+                    for(int i = 0; i < pattern.height; i++) {
+                        board_y = op.y + i;
+                        if(0 <= board_y && board_y < board.height) {
+                            if(pattern.cells.at(i).at(j) == 1) {
+                                unshifted_piece_count++;
+                            }
+                        }
+                    }
+                    for(int i = pattern.height - 1; i >= 0; i--) {
+                        board_y = op.y + i;
+                        if(0 <= board_y && board_y < board.height) {
+                            if(pattern.cells.at(i).at(j) == 1) {
+                                for(int k = unshifted_piece_count - 1; k < board_y; k++) {
+                                    swap(&board, board_x, k, board_x, k + 1);
+                                }
+                                unshifted_piece_count--;
+                            }
+                        }
+                    }
+                }
+            } else if(op.s == DOWN) {
+                for(int j = 0; j < pattern.width; j++) {
+                    board_x = op.x + j;
+                    if(board_x < 0 || board_x >= board.width) {
+                        continue;
+                    }
+                    int unshifted_piece_count = 0;
+                    for(int i = 0; i < pattern.height; i++) {
+                        board_y = op.y + i;
+                        if(0 <= board_y && board_y < board.height) {
+                            if(pattern.cells.at(i).at(j) == 1) {
+                                unshifted_piece_count++;
+                            }
+                        }
+                    }
+                    for(int i = 0; i < pattern.height; i++) {
+                        board_y = op.y + i;
+                        if(0 <= board_y && board_y < board.height) {
+                            if(pattern.cells.at(i).at(j) == 1) {
+                                for(int k = board.height - 1 - (unshifted_piece_count - 1); k > board_y; k--) {
+                                    swap(&board, board_x, k, board_x, k - 1);
+                                }
+                                unshifted_piece_count--;
+                            }
+                        }
+                    }
+                }
+            } else if(op.s == LEFT) {
+                for(int i = 0; i < pattern.height; i++) {
+                    board_y = op.y + i;
+                    if(board_y < 0 || board_y >= board.height) {
+                        continue;
+                    }
+                    int unshifted_piece_count = 0;
+                    for(int j = 0; j < pattern.width; j++) {
+                        board_x = op.x + j;
+                        if(0 <= board_x && board_x < board.width) {
+                            if(pattern.cells.at(i).at(j) == 1) {
+                                unshifted_piece_count++;
+                            }
+                        }
+                    }
+                    for(int j = pattern.width - 1; j >= 0; j--) {
+                        board_x = op.x + j;
+                        if(0 <= board_x && board_x < board.width) {
+                            if(pattern.cells.at(i).at(j) == 1) {
+                                for(int k = unshifted_piece_count - 1; k < board_x; k++) {
+                                    swap(&board, k, board_y, k + 1, board_y);
+                                }
+                                unshifted_piece_count--;
+                            }
+                        }
+                    }
+                }
+            } else if(op.s == RIGHT) {
+                for(int i = 0; i < pattern.height; i++) {
+                    board_y = op.y + i;
+                    if(board_y < 0 || board_y >= board.height) {
+                        continue;
+                    }
+                    int unshifted_piece_count = 0;
+                    for(int j = 0; j < pattern.width; j++) {
+                        board_x = op.x + j;
+                        if(0 <= board_x && board_x < board.width) {
+                            if(pattern.cells.at(i).at(j) == 1) {
+                                unshifted_piece_count++;
+                            }
+                        }
+                    }
+                    for(int j = 0; j < pattern.width; j++) {
+                        board_x = op.x + j;
+                        if(0 <= board_x && board_x < board.width) {
+                            if(pattern.cells.at(i).at(j) == 1) {
+                                for(int k = board.width - 1 - (unshifted_piece_count - 1); k > board_x; k--) {
+                                    swap(&board, k, board_y, k - 1, board_y);
+                                }
+                                unshifted_piece_count--;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return board;
+        }
+
         vector<struct Operation> Game::getAvailableOperations(Board board, vector<struct Pattern> patterns) {
             vector<struct Operation> operations;
 

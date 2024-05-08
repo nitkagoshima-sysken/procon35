@@ -102,6 +102,7 @@ namespace procon35 {
             Problem loadProblem(std::filesystem::path path);
             void writeAnswer(Answer answer, std::filesystem::path path);
             Board operate(Board board, struct Operation op, struct Pattern pattern);
+            Board inverseOperate(Board board, struct Operation op, struct Pattern pattern);
             vector<struct Operation> getAvailableOperations(Board board, vector<struct Pattern> patterns);
 
         private:
