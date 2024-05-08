@@ -13,7 +13,6 @@ BUILD_DIR = build
 # コンパイラのフラグ
 CC = g++
 CFLAGS = -Wall -Wextra -std=c++17
-# CFLAGS = -Wall -Wextra -std=c++17
 
 # ソースコードファイルのリスト
 SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
@@ -35,9 +34,9 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 # クリーンアップ
 clean:
 # Windows用
-	del $(BUILD_DIR) $(TARGET).exe
+# del $(BUILD_DIR) $(TARGET).exe
 # Linux用
-# rm -rf $(BUILD_DIR) $(TARGET)
+	rm -rf $(BUILD_DIR)/* $(TARGET)
 
 # 再コンパイル
 re:
