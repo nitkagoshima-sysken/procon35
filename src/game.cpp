@@ -251,11 +251,14 @@ namespace procon35 {
             
             if(op.s == UP) {
                 for(int j = 0; j < pattern.width; j++) {
+                    board_x = op.x + j;
+                    if(board_x < 0 || board_x >= board.width) {
+                        continue;
+                    }
                     int shifted_piece_count = 0;
                     for(int i = 0; i < pattern.height; i++) {
-                        board_x = op.x + j;
                         board_y = op.y + i;
-                        if((0 <= board_y && board_y < board.height) && (0 <= board_x && board_x < board.width)) {
+                        if(0 <= board_y && board_y < board.height) {
                             if(pattern.cells.at(i).at(j) == 1) {
                                 for(int k = board_y; k > shifted_piece_count; k--) {
                                     swap(&board, board_x, k, board_x, k - 1);
@@ -267,11 +270,14 @@ namespace procon35 {
                 }
             } else if(op.s == DOWN) {
                 for(int j = 0; j < pattern.width; j++) {
+                    board_x = op.x + j;
+                    if(board_x < 0 || board_x >= board.width) {
+                        continue;
+                    }
                     int shifted_piece_count = 0;
                     for(int i = pattern.height - 1; i >= 0; i--) {
-                        board_x = op.x + j;
                         board_y = op.y + i;
-                        if((0 <= board_y && board_y < board.height) && (0 <= board_x && board_x < board.width)) {
+                        if(0 <= board_y && board_y < board.height) {
                             if(pattern.cells.at(i).at(j) == 1) {
                                 for(int k = board_y; k < board.height - 1 - shifted_piece_count; k++) {
                                     swap(&board, board_x, k, board_x, k + 1);
@@ -283,11 +289,14 @@ namespace procon35 {
                 }
             } else if(op.s == LEFT) {
                 for(int i = 0; i < pattern.height; i++) {
+                    board_y = op.y + i;
+                    if(board_y < 0 || board_y >= board.height) {
+                        continue;
+                    }
                     int shifted_piece_count = 0;
                     for(int j = 0; j < pattern.width; j++) {
                         board_x = op.x + j;
-                        board_y = op.y + i;
-                        if((0 <= board_y && board_y < board.height) && (0 <= board_x && board_x < board.width)) {
+                        if(0 <= board_x && board_x < board.width) {
                             if(pattern.cells.at(i).at(j) == 1) {
                                 for(int k = board_x; k > shifted_piece_count; k--) {
                                     swap(&board, k, board_y, k - 1, board_y);
@@ -299,11 +308,14 @@ namespace procon35 {
                 }
             } else if(op.s == RIGHT) {
                 for(int i = 0; i < pattern.height; i++) {
+                    board_y = op.y + i;
+                    if(board_y < 0 || board_y >= board.height) {
+                        continue;
+                    }
                     int shifted_piece_count = 0;
                     for(int j = pattern.width - 1; j >= 0; j--) {
                         board_x = op.x + j;
-                        board_y = op.y + i;
-                        if((0 <= board_y && board_y < board.height) && (0 <= board_x && board_x < board.width)) {
+                        if(0 <= board_x && board_x < board.width) {
                             if(pattern.cells.at(i).at(j) == 1) {
                                 for(int k = board_x; k < board.width - 1 - shifted_piece_count; k++) {
                                     swap(&board, k, board_y, k + 1, board_y);
