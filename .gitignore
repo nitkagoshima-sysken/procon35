@@ -4,5 +4,8 @@
 /.vscode/
 /build/
 /src/nlohmann/
+/dataset/
 main
 main.exe
+dataset_gen
+dataset_gen.exe

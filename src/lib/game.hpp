@@ -104,10 +104,10 @@ namespace procon35 {
             Board operate(Board board, struct Operation op, struct Pattern pattern);
             Board inverseOperate(Board board, struct Operation op, struct Pattern pattern);
             vector<struct Operation> getAvailableOperations(Board board, vector<struct Pattern> patterns);
-
-        private:
             // 定型抜き型を返す
             vector<struct Pattern> getStandardPatterns();
+
+        private:
             void swap(Board* board, int x1, int y1, int x2, int y2);
         };
     }

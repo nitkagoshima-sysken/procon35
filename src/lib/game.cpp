@@ -475,9 +475,9 @@ namespace procon35 {
             for(int p = 0; p < patterns.size(); p++) {
                 // TODO: ここで数を絞らないと，探索ノードの数が多くなりすぎるから制限している
                 // 改良して制限を無くすべき
-                if(9 < p && p < 25) {
-                    continue;
-                }
+                // if(9 < p && p < 25) {
+                //     continue;
+                // }
                 
                 for(int i = -patterns.at(p).height + 1; i < board.height + patterns.at(p).height - 1; i++) {
                     for(int j = -patterns.at(p).width + 1; j < board.width + patterns.at(p).width - 1; j++) {
