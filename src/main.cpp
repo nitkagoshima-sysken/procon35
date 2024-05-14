@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "game.hpp"
-#include "solver.hpp"
+#include "lib/game.hpp"
+#include "lib/solver.hpp"
 
 int main(int argc, char **argv){
     procon35::game::Game game;
