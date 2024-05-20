@@ -20,9 +20,14 @@ TODOリスト
         のNNを作る
         すると，現在の盤面からgoalの盤面までに何手かかるかを評価できる
 
+        libtorchを動かせるようにして，C++でNNを動かす
+
 ・A*アルゴリズムの高速化，省メモリ化
     WikipediaのA*アルゴリズムのページを参考に，高速化，省メモリ化する
     省メモリ化のためにIDA*アルゴリズムを実装する
+・ビームサーチの実装
+・その他各種探索の実装
+    参考：https://jinnaiyuu.github.io/pdf/textbook.pdf
 
 実装上の問題，バグ
 ・Game::getAvailableOperations()で数を絞らないと，探索ノードの数が多くなりすぎてしまう
