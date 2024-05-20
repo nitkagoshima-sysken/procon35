@@ -31,12 +31,14 @@ int main(int argc, char **argv){
     procon35::game::Problem problem;
     procon35::game::Answer answer;
     procon35::solver::Solver_AStar solver_astar;
+    procon35::solver::Solver_SMAStar solver_smastar;
 
     problem = game.loadProblem("./json/problem.json");
 
     std::cout << "log: problem loaded." << std::endl;
 
-    answer = solver_astar.solve(game, problem);
+    // answer = solver_astar.solve(game, problem);
+    answer = solver_smastar.solve(game, problem, 10000);
 
     std::cout << "log: solver finished." << std::endl;
     std::cout << "log: answer: " << answer.operations.size() << " operations." << std::endl;
