@@ -41,6 +41,13 @@ dataset_gen: $(BUILD_DIR)/dataset_gen.o $(OBJECTS)
 $(BUILD_DIR)/dataset_gen.o: $(SRC_DIR)/dataset_gen.cpp
 	$(CC) $(CFLAGS) $(INC_PATH) -c $< -o $@ -O2
 
+# 問題データ生成
+problem_gen: $(BUILD_DIR)/problem_gen.o $(OBJECTS)
+	$(CC) $(CFLAGS) $(INC_PATH) $^ -o $@ -O2
+
+$(BUILD_DIR)/problem_gen.o: $(SRC_DIR)/problem_gen.cpp
+	$(CC) $(CFLAGS) $(INC_PATH) -c $< -o $@ -O2
+
 # クリーンアップ
 clean:
 # Windows用

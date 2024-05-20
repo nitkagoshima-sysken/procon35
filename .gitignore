@@ -10,3 +10,5 @@ main
 main.exe
 dataset_gen
 dataset_gen.exe
+problem_gen
+problem_gen.exe
