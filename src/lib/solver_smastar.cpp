@@ -9,27 +9,6 @@
 
 namespace procon35 {
     namespace solver {
-        size_t NodeHash::operator()(const Node* node) const {
-            size_t seed = node->board.board.size() * node->board.board.at(0).size();
-            for (auto y : node->board.board) {
-                for(auto x : y) {
-                    x = ((x >> 16) ^ x) * 0x45d9f3b;
-                    x = ((x >> 16) ^ x) * 0x45d9f3b;
-                    x = (x >> 16) ^ x;
-                    seed ^= x + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-                }
-            }
-            return seed;
-        }
-
-        bool NodeEqual::operator()(const Node* a, const Node* b) const {
-            return a->board.board == b->board.board;
-        }
-
-        bool CompareNodeReverse::operator()(Node* a, Node* b) {
-            return (a->cost + a->heuristic) < (b->cost + b->heuristic);
-        }
-
         procon35::game::Answer Solver_SMAStar::solve(procon35::game::Game game, procon35::game::Problem problem, int memory_bound) {
             std::priority_queue<Node*, vector<Node*>, CompareNode> open_queue;
             std::unordered_set<Node*, NodeHash, NodeEqual> closed_set;
