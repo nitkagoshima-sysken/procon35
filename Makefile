@@ -51,9 +51,9 @@ $(BUILD_DIR)/problem_gen.o: $(SRC_DIR)/problem_gen.cpp
 # クリーンアップ
 clean:
 # Windows用
-# del $(BUILD_DIR) main.exe dataset_gen.exe
+# del $(BUILD_DIR) main.exe dataset_gen.exe problem_gen.exe
 # Linux用
-	rm -rf $(BUILD_DIR)/* main dataset_gen
+	rm -rf $(BUILD_DIR)/* main dataset_gen problem_gen
 
 # 再コンパイル
 re:
