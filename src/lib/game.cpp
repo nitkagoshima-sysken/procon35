@@ -49,7 +49,7 @@ namespace procon35 {
         }
 
         BitBoard::BitBoard() = default;
-        BitBoard::BitBoard(int width, int height, vector<vector<char> > board) : width(width), height(height), board(board) {}
+        BitBoard::BitBoard(int width, int height, vector<vector<bitboard_value_type> > board) : width(width), height(height), board(board) {}
         BitBoard::BitBoard(const BitBoard& other) {
             width = other.width;
             height = other.height;
@@ -77,8 +77,8 @@ namespace procon35 {
             if(x < 0 || x >= width || y < 0 || y >= height) {
                 std::cout << __FILE__ << ":" << __LINE__ << ": " << "error: invalid x or y. x:" << x << " y:" << y << std::endl;
             }
-            int index = x / 4;
-            int shift = 3 - (x % 4);
+            int index = x / (bitboard_value_type_size / 2);
+            int shift = ((bitboard_value_type_size / 2) - 1) - (x % (bitboard_value_type_size / 2));
             int value = board.at(y).at(index) >> (shift * 2);
             return value & 0b11;
         }
@@ -89,12 +89,12 @@ namespace procon35 {
             if(value < 0 || value > 3) {
                 std::cout << __FILE__ << ":" << __LINE__ << ": " << "error: invalid value. value:" << value << std::endl;
             }
-            int index = x / 4;
-            int shift = 3 - (x % 4);
+            int index = x / (bitboard_value_type_size / 2);
+            int shift = ((bitboard_value_type_size / 2) - 1) - (x % (bitboard_value_type_size / 2));
             board.at(y).at(index) = (board.at(y).at(index) & ~(0b11 << (shift * 2))) | ((value & 0b11) << (shift * 2));
         }
         void BitBoard::appendLine() {
-            board.push_back(vector<char>());
+            board.push_back(vector<bitboard_value_type>());
             width_end = 0;
         }
         void BitBoard::appendValue(int value) {
@@ -104,9 +104,9 @@ namespace procon35 {
             if(width_end == 0) {
                 board.back().push_back(0);
             }
-            setValue(((board.back().size() - 1) * 4) + width_end, board.size() - 1, value);
+            setValue(((board.back().size() - 1) * (bitboard_value_type_size / 2)) + width_end, board.size() - 1, value);
             width_end++;
-            if(width_end >= 4) {
+            if(width_end >= (bitboard_value_type_size / 2)) {
                 width_end = 0;
             }
         }
@@ -330,6 +330,252 @@ namespace procon35 {
             return board;
         }
 
+        // inline void _swap(Board* board, int x1, int y1, int x2, int y2) {
+        //     int index1 = x1 / (bitboard_value_type_size / 2);
+        //     int shift1 = ((bitboard_value_type_size / 2) - 1) - (x1 % (bitboard_value_type_size / 2));
+        //     int tmp1 = (board->board.at(y1).at(index1) >> (shift1 * 2)) & 0b11;
+        //     int index2 = x2 / (bitboard_value_type_size / 2);
+        //     int shift2 = ((bitboard_value_type_size / 2) - 1) - (x2 % (bitboard_value_type_size / 2));
+        //     int tmp2 = (board->board.at(y2).at(index2) >> (shift2 * 2)) & 0b11;
+        //     board->board.at(y1).at(index1) = (board->board.at(y1).at(index1) & ~(0b11 << (shift1 * 2))) | (tmp2 << (shift1 * 2));
+        //     board->board.at(y2).at(index2) = (board->board.at(y2).at(index2) & ~(0b11 << (shift2 * 2))) | (tmp1 << (shift2 * 2));
+        // }
+
+        // debug
+        void print(Board board) {
+            for(int i = 0; i < board.height; i++) {
+                for(int j = 0; j < board.width; j++) {
+                    int n = board.getValue(j, i);
+                    if(n / 10 == 0) {
+                        std::cout << "  " << n;
+                    } else {
+                        std::cout << " " << n;
+                    }
+                }
+                std::cout << std::endl;
+            }
+        }
+
+        Board Game::operateBitBoard(Board board, struct Operation op, struct Pattern pattern) {
+            // BitBoard用の高速なoperate()
+            // 逐次交換ではなく，循環シフトのように操作する
+            int board_x, board_y;
+            int shifted_piece_count;
+            int index, shift;
+            int target_index, target_shift;
+            bitboard_value_type move_value;
+            // bitboard_value_type mask;
+
+            // TODO: 不動のときどうなる？ 0->0にup,left, max->maxにdown,right
+            // 左シフトが溢れたら循環してしまう
+
+            // std::cout << "in operateBitBoard" << std::endl;
+            
+            if(op.s == UP) {
+                for(int j = 0; j < pattern.width; j++) {
+                    board_x = op.x + j;
+                    if(board_x < 0 || board_x >= board.width) {
+                        continue;
+                    }
+                    index = board_x / (bitboard_value_type_size / 2);
+                    shift = ((bitboard_value_type_size / 2) - 1) - (board_x % (bitboard_value_type_size / 2));
+                    // mask = 0b11 << (shift * 2);
+                    shifted_piece_count = 0;
+                    for(int i = 0; i < pattern.height; i++) {
+                        board_y = op.y + i;
+                        if(0 <= board_y && board_y < board.height) {
+                            if(pattern.cells.at(i).at(j) == 1) {
+                                // TODO: maskに置き換えると速くなる？
+                                move_value = board.board.at(board_y).at(index) & (0b11 << (shift * 2));
+                                for(int k = board_y; k > shifted_piece_count; k--) {
+                                    board.board.at(k).at(index) = 
+                                        (board.board.at(k).at(index) & ~(0b11 << (shift * 2)))
+                                        | ((board.board.at(k - 1).at(index) & (0b11 << (shift * 2))));
+                                }
+                                board.board.at(shifted_piece_count).at(index) = (board.board.at(shifted_piece_count).at(index) & ~(0b11 << (shift * 2))) | move_value;
+
+                                shifted_piece_count++;
+                            }
+                        }
+                    }
+                }
+            } else if(op.s == DOWN) {
+                for(int j = 0; j < pattern.width; j++) {
+                    board_x = op.x + j;
+                    if(board_x < 0 || board_x >= board.width) {
+                        continue;
+                    }
+                    index = board_x / (bitboard_value_type_size / 2);
+                    shift = ((bitboard_value_type_size / 2) - 1) - (board_x % (bitboard_value_type_size / 2));
+                    // mask = 0b11 << (shift * 2);
+                    shifted_piece_count = 0;
+                    for(int i = pattern.height - 1; i >= 0; i--) {
+                        board_y = op.y + i;
+                        if(0 <= board_y && board_y < board.height) {
+                            if(pattern.cells.at(i).at(j) == 1) {
+                                move_value = board.board.at(board_y).at(index) & (0b11 << (shift * 2));
+                                for(int k = board_y; k < board.height - 1 - shifted_piece_count; k++) {
+                                    board.board.at(k).at(index) = 
+                                        (board.board.at(k).at(index) & ~(0b11 << (shift * 2)))
+                                        | ((board.board.at(k + 1).at(index) & (0b11 << (shift * 2))));
+                                }
+                                board.board.at(board.height - 1 - shifted_piece_count).at(index) = (board.board.at(board.height - 1 - shifted_piece_count).at(index) & ~(0b11 << (shift * 2))) | move_value;
+
+                                shifted_piece_count++;
+                            }
+                        }
+                    }
+                }
+            } else if(op.s == LEFT) {
+                // std::cout << "LEFT" << std::endl;
+                for(int i = 0; i < pattern.height; i++) {
+                    board_y = op.y + i;
+                    if(board_y < 0 || board_y >= board.height) {
+                        continue;
+                    }
+                    shifted_piece_count = 0;
+                    for(int j = 0; j < pattern.width; j++) {
+                        board_x = op.x + j;
+                        if(0 <= board_x && board_x < board.width) {
+                            if(pattern.cells.at(i).at(j) == 1) {
+                                // std::cout << "move" << std::endl;
+                                std::cout << "before:" << std::endl;
+                                print(board);
+                                index = board_x / (bitboard_value_type_size / 2);
+                                shift = ((bitboard_value_type_size / 2) - 1) - (board_x % (bitboard_value_type_size / 2));
+                                move_value = (board.board.at(board_y).at(index) >> (shift * 2)) & 0b11;
+
+                                // std::cout << "log: line" << __LINE__ << std::endl;
+                                
+                                target_index = shifted_piece_count / (bitboard_value_type_size / 2);
+                                target_shift = ((bitboard_value_type_size / 2) - 1) - (shifted_piece_count % (bitboard_value_type_size / 2));
+
+                                // std::cout << "log: line" << __LINE__ << std::endl;
+
+                                std::cout << "index: " << index << std::endl;
+                                std::cout << "shift: " << shift << std::endl;
+                                std::cout << "target_index: " << target_index << std::endl;
+                                std::cout << "target_shift: " << target_shift << std::endl;
+                                std::cout << "move_value: " << move_value << std::endl;
+
+                                // board.board.at(board_y).at(index) = board.board.at(board_y).at(index) & ~(0b11 << (shift * 2));
+                                // print(board);
+
+                                // debug
+                                // (board.board.at(board_y).at(index) & ((0b1 << (shift * 2)) - 1));
+                                // // std::cout << "log: line" << __LINE__ << std::endl;
+                                // ((board.board.at(board_y).at(index) & ~((0b1 << ((shift + 1) * 2)) - 1)) >> 2);
+                                // // std::cout << "log: line" << __LINE__ << std::endl;
+                                // ((board.board.at(board_y).at(index - 1) & 0b11) << (bitboard_value_type_size - 2));
+
+                                // std::cout << "log: line" << __LINE__ << std::endl;
+
+                                if(index != target_index) {
+                                    /*
+                                    [a  b] [c  d,  e  f  g  h,  i] [j] [k  l]
+                                    -> j move
+                                    [a  b] [j] [c,  d  e  f  g,  h  i] [k  l]
+                                    */
+                                    board.board.at(board_y).at(index) = 
+                                        (board.board.at(board_y).at(index) & ((0b1 << (shift * 2)) - 1))
+                                        | ((board.board.at(board_y).at(index) & ~((0b1 << ((shift + 1) * 2)) - 1)) >> 2)// shiftに値で分岐が必要////////////////////////////
+                                        | ((board.board.at(board_y).at(index - 1) & 0b11) << (bitboard_value_type_size - 2));
+                                    // std::cout << "log: line" << __LINE__ << std::endl;
+                                    for(int k = index - 1; k > target_index; k--) {
+                                        board.board.at(board_y).at(k) = 
+                                            (board.board.at(board_y).at(k) >> 2)
+                                            | ((board.board.at(board_y).at(k - 1) & 0b11) << (bitboard_value_type_size - 2));
+                                    }
+                                    // std::cout << "log: line" << __LINE__ << std::endl;
+                                    if((target_shift + 1) * 2 < bitboard_value_type_size) {
+                                        board.board.at(board_y).at(target_index) = 
+                                            (board.board.at(board_y).at(target_index) & ~((0b1 << ((target_shift + 1) * 2)) - 1))
+                                            | ((board.board.at(board_y).at(target_index) >> 2) & ((0b1 << (target_shift * 2)) - 1))
+                                            | (move_value << (target_shift * 2));
+                                    } else {
+                                        board.board.at(board_y).at(target_index) = 
+                                            ((board.board.at(board_y).at(target_index) >> 2) & ((0b1 << (target_shift * 2)) - 1))// &以降は不要っぽい？
+                                            | (move_value << (target_shift * 2));
+                                    }
+                                } else {
+                                    /*
+                                    [a  b] [c  d  e] [f] [g  h]
+                                    -> f move
+                                    [a  b] [f] [c  d  e] [g  h]
+                                    */
+                                    board.board.at(board_y).at(index) = 
+                                        (board.board.at(board_y).at(index) & ((0b1 << (shift * 2)) - 1))
+                                        | (board.board.at(board_y).at(index) & ~((0b1 << ((target_shift + 1) * 2)) - 1))
+                                        | ((board.board.at(board_y).at(index) >> 2) & (~((0b1 << (shift * 2)) - 1) & ((0b1 << (target_shift * 2)) - 1)))
+                                        | (move_value << (target_shift * 2));
+                                }
+                                // TODO: 32ビット変数で32ビット左シフトしてるからバグってる
+                                // ~0をしたら全部1になる？ -> なる
+                                // UINT32_MAXを使う？
+
+                                shifted_piece_count++;
+                                // std::cout << "move end" << std::endl;
+                                std::cout << "after:" << std::endl;
+                                print(board);
+                            }
+                        }
+                    }
+                }
+            } else if(op.s == RIGHT) {
+                // std::cout << "RIGHT" << std::endl;
+                for(int i = 0; i < pattern.height; i++) {
+                    board_y = op.y + i;
+                    if(board_y < 0 || board_y >= board.height) {
+                        continue;
+                    }
+                    shifted_piece_count = 0;
+                    for(int j = pattern.width - 1; j >= 0; j--) {
+                        board_x = op.x + j;
+                        if(0 <= board_x && board_x < board.width) {
+                            if(pattern.cells.at(i).at(j) == 1) {
+                                // std::cout << "move" << std::endl;
+                                index = board_x / (bitboard_value_type_size / 2);
+                                shift = ((bitboard_value_type_size / 2) - 1) - (board_x % (bitboard_value_type_size / 2));
+                                move_value = (board.board.at(board_y).at(index) >> (shift * 2)) & 0b11;
+                                
+                                target_index = (board.width - 1 - shifted_piece_count) / (bitboard_value_type_size / 2);
+                                target_shift = ((bitboard_value_type_size / 2) - 1) - ((board.width - 1 - shifted_piece_count) % (bitboard_value_type_size / 2));
+
+                                // std::cout << "index: " << index << std::endl;
+                                // std::cout << "target_index: " << target_index << std::endl;
+
+                                // std::cout << "log: line" << __LINE__ << std::endl;
+                                if(index != target_index) {
+                                    board.board.at(board_y).at(index) = 
+                                        ((board.board.at(board_y).at(index) & ((0b1 << (shift * 2)) - 1)) << 2)
+                                        | (board.board.at(board_y).at(index) & ~((0b1 << ((shift + 1) * 2)) - 1))
+                                        | ((board.board.at(board_y).at(index + 1) >> (bitboard_value_type_size - 2)) & 0b11);
+                                    // std::cout << "log: line" << __LINE__ << std::endl;
+                                    for(int k = index + 1; k < target_index; k++) {
+                                        board.board.at(board_y).at(k) = 
+                                            (board.board.at(board_y).at(k) << 2)
+                                            | ((board.board.at(board_y).at(k + 1) >> (bitboard_value_type_size - 2)) & 0b11);
+                                    }
+                                }
+                                // std::cout << "log: line" << __LINE__ << std::endl;
+                                board.board.at(board_y).at(target_index) = 
+                                    (board.board.at(board_y).at(target_index) & ((0b1 << (target_shift * 2)) - 1))
+                                    | ((board.board.at(board_y).at(target_index) << 2) & ~((0b1 << ((target_shift + 1) * 2)) - 1))
+                                    | (move_value << (target_shift * 2));
+
+                                shifted_piece_count++;
+                                // std::cout << "move end" << std::endl;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // std::cout << "end operateBitBoard" << std::endl;
+
+            return board;
+        }
+
         // operate()の逆操作
         // 端のマスから，patternとshift方向に従って指定した座標に値を持ってくる
         // 指定する座標はpatternの左上隅の座標
@@ -475,9 +721,9 @@ namespace procon35 {
             for(int p = 0; p < patterns.size(); p++) {
                 // TODO: ここで数を絞らないと，探索ノードの数が多くなりすぎるから制限している
                 // 改良して制限を無くすべき
-                // if(9 < p && p < 25) {
-                //     continue;
-                // }
+                if(9 < p && p < 25) {
+                    continue;
+                }
                 
                 for(int i = -patterns.at(p).height + 1; i < board.height + patterns.at(p).height - 1; i++) {
                     for(int j = -patterns.at(p).width + 1; j < board.width + patterns.at(p).width - 1; j++) {
@@ -551,7 +797,7 @@ namespace procon35 {
             return patterns;
         }
         
-        void Game::swap(Board* board, int x1, int y1, int x2, int y2) {
+        inline void Game::swap(Board* board, int x1, int y1, int x2, int y2) {
             int tmp = board->getValue(x1, y1);
             board->setValue(x1, y1, board->getValue(x2, y2));
             board->setValue(x2, y2, tmp);

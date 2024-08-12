@@ -5,6 +5,14 @@
 
 using std::vector;
 
+// 32bit環境でuint64_tを使うとバグる
+// uint32_tまでは正常動作を確認済み
+// ここを変更するとmake reする必要がある
+using bitboard_value_type = uint32_t;
+constexpr int bitboard_value_type_size = 32;
+// using bitboard_value_type = uint8_t;
+// constexpr int bitboard_value_type_size = 8;
+
 namespace procon35 {
     namespace game {
         enum Direction {
@@ -35,9 +43,9 @@ namespace procon35 {
         public:
             int width;
             int height;
-            vector<vector<char> > board;
+            vector<vector<bitboard_value_type> > board;
             BitBoard();
-            BitBoard(int width, int height, vector<vector<char> > board);
+            BitBoard(int width, int height, vector<vector<bitboard_value_type> > board);
             BitBoard(const BitBoard& other);
             BitBoard& operator=(const BitBoard& other);
             bool operator==(BitBoard& other);
@@ -102,6 +110,7 @@ namespace procon35 {
             Problem loadProblem(std::filesystem::path path);
             void writeAnswer(Answer answer, std::filesystem::path path);
             Board operate(Board board, struct Operation op, struct Pattern pattern);
+            Board operateBitBoard(Board board, struct Operation op, struct Pattern pattern);
             Board inverseOperate(Board board, struct Operation op, struct Pattern pattern);
             vector<struct Operation> getAvailableOperations(Board board, vector<struct Pattern> patterns);
             // 定型抜き型を返す

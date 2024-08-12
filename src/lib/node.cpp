@@ -74,6 +74,25 @@ namespace procon35 {
                 }
 
                 return (double)distance_sum;
+            } else if(mode == 3) {
+                // BitBoardでしか使えないが高速
+                int not_same_value_num = 0;
+
+                bitboard_value_type diff;
+                for(int i = 0; i < board.height; i++) {
+                    // 切り上げ
+                    for(int j = 0; j < ((board.width + (bitboard_value_type_size / 2)) - 1) / (bitboard_value_type_size / 2); j++) {
+                        diff = board.board.at(i).at(j) ^ end->board.board.at(i).at(j);
+                        while(diff != 0) {
+                            if((diff & 0b11) != 0) {
+                                not_same_value_num++;
+                            }
+                            diff = diff >> 2;
+                        }
+                    }
+                }
+
+                return (double)not_same_value_num;
             }
         }
         void Node::print() {
