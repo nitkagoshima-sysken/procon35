@@ -9,4 +9,6 @@ headers = {
 response = requests.get(url, headers=headers)
 
 print(response.status_code)
+print("文章データ")
 print(response.text)
+print("2次元配列")
