@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -6,7 +8,7 @@ class Board_information{
     public:
         vector<vector<int> > question_board;
         vector<vector<int> > now_board;
-        void Board_show(vector<vector<int> > x);
+        void Board_show(const vector<vector<int>>& x);
 };
 
 class Cutting_die{
