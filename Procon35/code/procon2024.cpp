@@ -2,6 +2,7 @@
 #include <string>
 #include <memory>
 
+//画面出力の関数
 void Board_information::Board_show(const std::vector<std::vector<int>>& board) 
 {
     char color_clear[] = "\033[39m";
