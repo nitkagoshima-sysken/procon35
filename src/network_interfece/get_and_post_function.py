@@ -1,11 +1,12 @@
 import requests
 
 def get(url):
-    requests.get(url)
+    response = requests.get(url)
 
     while response.status_code != 200:
-        response = requests.get(url)
         print("ファイルの取得に失敗しました")
+
+        response = requests.get(url)
 
         if response.status_code == 200:
             print("ファイルとれたぜイェーーーーーーイ")
@@ -29,10 +30,12 @@ def get(url):
 def post(url, answer_json):
     response = requests.post(url, answer_json)
 
-    while response.status_code != 201:
-        response = requests.post(url, answer_json)
+    while response.status_code != 200:
         print("送れん・・・")
-        if response.status_code == 201:
+
+        response = requests.post(url, answer_json)
+
+        if response.status_code == 200:
             print("送れた！！")
             break
         elif response.status_code == 400:
