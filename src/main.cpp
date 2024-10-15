@@ -61,7 +61,7 @@ int main(int argc, char **argv){
     //game.writeAnswer(answer, "./json/answer.json");
 
     // Pythonのpost関数を呼び出す
-    py::object answer_python = py::cast<json>(answer);  // 適切なJSON形式に置き換える
+    py::object answer_python = py::cast(answer);  // Jsonを文字列に変換
     get_post_module.attr("post")(url, answer_python);
 
 
