@@ -13,6 +13,7 @@ BUILD_DIR = build
 # コンパイラのフラグ
 CC = g++
 CFLAGS = -Wall -Wextra -std=c++17 -I /usr/include/python3.10
+#CFLAGS += $(shell python3 -m pybind11 --includes)
 
 # CFLAGS = -Wall -Wextra -std=c++17
 
