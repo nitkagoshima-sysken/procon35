@@ -6,14 +6,15 @@ SRC_DIR = src
 
 # インクルードパスにnlohmann/json.hppを追加
 INC_PATH = -Isrc
+#INC_PATH = -Isrc $(shell python3.10 -m pybind11 --includes)
 
 # オブジェクトファイルの出力ディレクトリ
 BUILD_DIR = build
 
 # コンパイラのフラグ
 CC = g++
-CFLAGS = -Wall -Wextra -std=c++17 -I /usr/include/python3.10
-#CFLAGS += $(shell python3 -m pybind11 --includes)
+CFLAGS = -Wall -Wextra -O3 -std=c++17 -I /usr/include/python3.10 -shared -fPIC
+CFLAGS += $(shell python3 -m pybind11 --includes)
 
 # CFLAGS = -Wall -Wextra -std=c++17
 
