@@ -13,8 +13,8 @@ BUILD_DIR = build
 
 # コンパイラのフラグ
 CC = g++
-CFLAGS = -Wall -Wextra -O3 -std=c++17 -I /usr/include/python3.10 -shared -fPIC
-CFLAGS += $(shell python3 -m pybind11 --includes)
+CFLAGS = -Wall -Wextra -O3 -std=c++17 -I /usr/include/python3.10# -shared -fPIC python3.10のところは自分が入れてるバージョンを
+#CFLAGS += $(shell python3 -m pybind11 --includes)
 
 # CFLAGS = -Wall -Wextra -std=c++17
 
