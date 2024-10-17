@@ -1,6 +1,6 @@
 #include <iostream>
-//#include<pybind11/embed.h>
-#include<pybind/pybind11/include/pybind11/embed.h> //pybind11をpybind内に入れる
+
+#include<pybind11/embed.h>
 #include <nlohmann/json.hpp>
 
 #include "game.hpp"
