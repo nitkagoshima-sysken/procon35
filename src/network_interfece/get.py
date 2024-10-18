@@ -12,7 +12,7 @@ def get(url):
         "Authorization": f"Bearer {token}"
     }
 
-    response = requests.get("192.168.100.100", headers=headers)
+    response = requests.get(url, headers=headers)
 
     while response.status_code != 200:
         print("ファイルの取得に失敗しました")

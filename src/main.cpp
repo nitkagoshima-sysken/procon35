@@ -1,30 +1,17 @@
 #include <iostream>
 
-#include <pybind11/embed.h>
 #include "nlohmann/json.hpp"
 
 #include "game.hpp"
 #include "solver.hpp"
 
-namespace py = pybind11;
-
 int main(int argc, char **argv){
-    py::scoped_interpreter guard{};
-
     procon35::game::Game game;
     procon35::game::Problem problem;
     procon35::game::Answer answer;
     procon35::solver::Solver_AStar solver_aster;
 
-    
-    // Pythonモジュールをインポート
-    py::module get_post_module = py::module::import("get_and_post_function");
-
-    // Pythonのget関数を呼び出す
-    std::string url = "localhost8080/problem";
-    py::object problem_board = get_post_module.attr("get")(url);
-
-    //problem = game.loadProblem("./json/problem.json");
+    problem = game.loadProblem("./json/problem.json");
 
     std::cout << "log: problem loaded." << std::endl;
 
@@ -58,12 +45,7 @@ int main(int argc, char **argv){
         }
     }
 
-    //game.writeAnswer(answer, "./json/answer.json");
-
-    // Pythonのpost関数を呼び出す
-    py::object answer_python = py::cast(answer);  // Jsonを文字列に変換
-    get_post_module.attr("post")(url, answer_python);
-
+    game.writeAnswer(answer, "./json/answer.json");
 
     return 0;
 }

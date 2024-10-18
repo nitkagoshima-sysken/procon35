@@ -4,8 +4,6 @@ import json
 url = "localhost8080/problem"
 
 # postする関数
-
-
 def post(url):
     # トークン
     token = "kagoshima15370fe7115e2c9680987187e634b2ed068f1274d3942407c30b019"
