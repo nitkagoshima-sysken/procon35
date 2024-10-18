@@ -21,7 +21,7 @@ int main(int argc, char **argv){
     py::module get_post_module = py::module::import("get_and_post_function");
 
     // Pythonのget関数を呼び出す
-    std::string url = "localhost:8080";  // 適当なURL("/problem")に置き換えてください
+    std::string url = "/problem";  // 適当なURL("/problem")に置き換えてください
     py::object problem_board = get_post_module.attr("get")(url);
 
     //problem = game.loadProblem("./json/problem.json");

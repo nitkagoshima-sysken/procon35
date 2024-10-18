@@ -5,18 +5,16 @@ TARGET = main
 SRC_DIR = src
 
 # インクルードパスにnlohmann/json.hppを追加
-INC_PATH = -Isrc
-#INC_PATH = -Isrc $(shell python3.10 -m pybind11 --includes)
+INC_PATH = $(shell python3 -m pybind11 --includes)
+INC_PATH += -Isrc
 
 # オブジェクトファイルの出力ディレクトリ
 BUILD_DIR = build
 
 # コンパイラのフラグ
 CC = g++
-CFLAGS = -Wall -Wextra -O3 -std=c++17 -I /usr/include/python3.10#-Wextra -shared -fPIC python3.10のところは自分が入れてるバージョンを
-CFLAGS += $(shell python3 -m pybind11 --includes)
-
-# CFLAGS = -Wall -Wextra -std=c++17
+CFLAGS = -Wall -O3 -std=c++17 -shared -fPIC
+CFLAGS += -undefined,dynamic_lookup
 
 # ソースコードファイルのリスト
 SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
@@ -29,11 +27,11 @@ all: $(TARGET)
 
 # プロジェクトのビルド
 $(TARGET): $(OBJECTS)
-	$(CC) $(CFLAGS) $(INC_PATH) $^ -o $@ -O2
+	$(CC) $(CFLAGS) $(INC_PATH) $^ -o $@$(shell python3-config --extension-suffix)
 
 # オブジェクトファイルのビルド
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CC) $(CFLAGS) $(INC_PATH) -c $< -o $@ -O2
+	$(CC) $(CFLAGS) $(INC_PATH) -c $< -o $@
 
 # クリーンアップ
 clean:
