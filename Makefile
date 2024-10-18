@@ -6,7 +6,6 @@ SRC_DIR = src
 
 # インクルードパスにnlohmann/json.hppを追加
 INC_PATH = $(shell python3 -m pybind11 --includes)
-INC_PATH += -Isrc
 
 # オブジェクトファイルの出力ディレクトリ
 BUILD_DIR = build
@@ -14,7 +13,6 @@ BUILD_DIR = build
 # コンパイラのフラグ
 CC = g++
 CFLAGS = -Wall -O3 -std=c++17 -shared -fPIC
-CFLAGS += -undefined,dynamic_lookup
 
 # ソースコードファイルのリスト
 SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
@@ -27,7 +25,7 @@ all: $(TARGET)
 
 # プロジェクトのビルド
 $(TARGET): $(OBJECTS)
-	$(CC) $(CFLAGS) $(INC_PATH) $^ -o $@$(shell python3-config --extension-suffix)
+	$(CC) $(CFLAGS) $(INC_PATH) $^ -o $@
 
 # オブジェクトファイルのビルド
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
