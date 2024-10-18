@@ -37,3 +37,7 @@ def post(url):
             print("競技時間外だ気を取り直してやり直そう")
 
     return 0
+
+
+if __name__ == "__main__":
+    post(url)

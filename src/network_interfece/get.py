@@ -35,3 +35,7 @@ def get(url):
     
     with open("./json/problem.json", "w") as f:
         json.dump(problem_board, f)
+
+
+if __name__ == "__main__":
+    get(url)
