@@ -152,6 +152,11 @@ namespace procon35 {
                         open_queue.push(neighbor_node);
                     }
                 }
+
+                if(count % 50 == 0){
+                    answer.operations = reconstructPath(current_node->parent);
+                    game.writeAnswer(answer, "./json/answer.json");
+                }
             }
 
             std::cout << "log: solver finished; unsolved." << std::endl;

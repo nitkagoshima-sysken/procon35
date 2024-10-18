@@ -5,14 +5,14 @@ TARGET = main
 SRC_DIR = src
 
 # インクルードパスにnlohmann/json.hppを追加
-INC_PATH = $(shell python3 -m pybind11 --includes)
+#INC_PATH = $(shell python3 -m pybind11 --includes)
 
 # オブジェクトファイルの出力ディレクトリ
 BUILD_DIR = build
 
 # コンパイラのフラグ
 CC = g++
-CFLAGS = -Wall -O3 -std=c++17 -shared -fPIC
+CFLAGS = -Wall -O3 -std=c++17 #-shared -fPIC 
 
 # ソースコードファイルのリスト
 SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
@@ -34,9 +34,9 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 # クリーンアップ
 clean:
 # Windows用
-#del $(BUILD_DIR) $(TARGET).exe
+	del $(BUILD_DIR) $(TARGET).exe
 # Linux用
-	rm -rf $(BUILD_DIR) $(TARGET)
+#rm -rf $(BUILD_DIR) $(TARGET)
 
 # 再コンパイル
 re:

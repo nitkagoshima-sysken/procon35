@@ -1,15 +1,16 @@
 import requests
+import Content-type: json
 
 def get(url):
     #トークン
-    token = "kagoshima15370fe7115e2c9680987187e634b2ed068f1274d3942407c30b019"
+    #token = "kagoshima15370fe7115e2c9680987187e634b2ed068f1274d3942407c30b019"
 
     #リクエストヘッダーにトークンを追加
-    headers={
-        "Authorization": f"Bearer {token}"
-    }
+    #headers={
+    #   "Authorization": f"Bearer {token}"
+    #}
 
-    response = requests.get("192.168.100.100", headers=headers)
+    response = requests.get(url)#"192.168.100.100", headers=headers
 
     while response.status_code != 200:
         print("ファイルの取得に失敗しました")

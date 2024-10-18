@@ -1,6 +1,7 @@
 #include <vector>
 #include <filesystem>
 #include <fstream>
+#include<iostream>
 
 #include "nlohmann/json.hpp"
 
@@ -165,6 +166,7 @@ namespace procon35 {
                 operation["y"] = op.y;
                 operation["s"] = op.s;
                 data["ops"].push_back(operation);
+                    std::cout  << "{p:"<< op.p << ", x:" << op.x << ", y:" << op.y << ", s:" << op.s << "}" << std::endl; 
             }
             ofs << data.dump(4);
             ofs.close();
