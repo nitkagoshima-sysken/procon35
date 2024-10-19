@@ -2,11 +2,11 @@ import requests
 import time
 import json
 
-url = "http://localhost:8080/problem"
+url = "http://172.29.1.2:80/problem"#"http://localhost:8080/problem"
 
 def get(url):
     #トークン
-    token = "token1"#"kagoshima15370fe7115e2c9680987187e634b2ed068f1274d3942407c30b019"
+    token = "kagoshima15370fe7115e2c9680987187e634b2ed068f1274d3942407c30b019"#"token1"
 
     #リクエストヘッダーにトークンを追加
     headers={
