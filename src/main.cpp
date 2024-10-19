@@ -10,18 +10,20 @@ int main(int argc, char **argv){
     procon35::game::Problem problem;
     procon35::game::Answer answer;
     procon35::solver::Solver_AStar solver_aster;
+    procon35::solver::Solver_Sequential solver_sequential;
 
     problem = game.loadProblem("./json/problem.json");
 
     std::cout << "log: problem loaded." << std::endl;
 
-    answer = solver_aster.solve(game, problem);
+    // answer = solver_aster.solve(game, problem);
+    answer = solver_sequential.solve(game, problem);
 
     std::cout << "log: solver finished." << std::endl;
     std::cout << "log: answer: " << answer.operations.size() << " operations." << std::endl;
 
     // 回答を表示する falseにすれば非表示となる
-    bool print_answer = true;
+    bool print_answer = false;
     if(print_answer) {
         std::cout << "log: answer operations:" << std::endl;
         struct procon35::game::Board board = problem.start_board;

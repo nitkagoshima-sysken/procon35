@@ -41,6 +41,13 @@ namespace procon35 {
             vector<struct procon35::game::Operation> reconstructPath(Node* current_node);
         };
 
+        class Solver_Sequential : Solver {
+        public:
+            Solver_Sequential();
+            ~Solver_Sequential();
+            procon35::game::Answer solve(procon35::game::Game game, procon35::game::Problem problem);
+        };
+
         class Solver_Example : Solver {
         public:
             Solver_Example();
