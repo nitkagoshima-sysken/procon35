@@ -21,7 +21,7 @@ namespace procon35 {
         struct Coordinate value_search(struct procon35::game::Board board, struct Coordinate aligning_coordinate, int target_value, int aligned_y_min) {
             struct Coordinate coordinate = aligning_coordinate;
 
-            // 手数の少ない真下から探索
+            // 手数の少ない真下から探索 揃えたい数字と一致する数字を探索する
             for(int y = aligning_coordinate.y; y < board.height && y < aligned_y_min; y++) {
                 if(board.board.at(y).at(aligning_coordinate.x) == target_value) {
                     coordinate.x = aligning_coordinate.x;
@@ -123,7 +123,7 @@ namespace procon35 {
 
                     // yを揃える
                     if(target_coordinate.y != aligning_coordinate.y) {
-                        op.p = 0;
+                        op.p = 1;
                         op.s = procon35::game::UP;
                         op.x = aligning_coordinate.x;
                         op.y = target_coordinate.y;

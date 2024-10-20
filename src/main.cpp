@@ -12,7 +12,7 @@ int main(int argc, char **argv){
     procon35::solver::Solver_AStar solver_aster;
     procon35::solver::Solver_Sequential solver_sequential;
 
-    problem = game.loadProblem("./json/problem.json");
+    problem = game.loadProblem("./json/problem.json");////"./json/1.json"
 
     std::cout << "log: problem loaded." << std::endl;
 

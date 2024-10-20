@@ -12,7 +12,7 @@ BUILD_DIR = build
 
 # コンパイラのフラグ
 CC = g++
-CFLAGS = -Wall -O3 -std=c++17 #-shared -fPIC 
+CFLAGS = -Wall -O3 -std=c++17 #-shared -fPIC
 
 # ソースコードファイルのリスト
 SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
